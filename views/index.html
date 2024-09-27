@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial - Portal do Cliente MVK</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra lateral -->
+        <nav class="sidebar">
+            <h2>Portal MVK</h2>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Perfil</a></li>
+                <li><a href="#">Posição Financeira</a></li>
+                <li><a href="#">Posição de Pedido</a></li>
+                <li><a href="#">Consulta Notas Fiscais</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <header>
+                <h1 id="welcome-message">Carregando...</h1>
+            </header>
+            <main>
+                <p>Selecione uma opção no menu lateral para começar.</p>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function fetchClienteInfo() {
+            try {
+                const response = await fetch('http://localhost:3001/auth/getClienteInfo');  // Use a URL correta aqui
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Erro ao buscar informações do cliente (HTML):', errorText);
+                    document.getElementById('welcome-message').textContent = 'Erro ao carregar informações do cliente';
+                    return;
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const razaosocial = result.razaosocial;
+                    document.getElementById('welcome-message').textContent = `Olá ${razaosocial}, Bem-vindo ao portal do cliente MVK`;
+                } else {
+                    document.getElementById('welcome-message').textContent = 'Erro ao carregar informações do cliente';
+                }
+            } catch (error) {
+                console.error('Erro ao buscar informações do cliente:', error);
+                document.getElementById('welcome-message').textContent = 'Erro ao carregar informações do cliente';
+            }
+        }
+
+        window.onload = fetchClienteInfo;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Cliente MVK - Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Lado esquerdo com a imagem -->
+        <div class="login-left">
+            <img src="/images/login-image.jpg" alt="Login Image">
+        </div>
+
+        <!-- Lado direito com o formulário -->
+        <div class="login-right">
+            <h2>Portal do Cliente MVK - Login</h2>
+            <form id="loginForm">
+                <input type="text" id="user" placeholder="Informe CNPJ ou CPF" required>
+                <input type="password" id="password" placeholder="Informe sua senha" required>
+                <button type="submit">Entrar</button>
+                <p class="error-message" id="errorMessage"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const user = document.getElementById('user').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Fazendo a requisição de login para a API
+                const authResponse = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user, password }),
+                });
+
+                const result = await authResponse.json();
+
+                if (result.success) {
+                    // Se o login for bem-sucedido, redireciona para a página inicial
+                    window.location.href = '/index.html';
+                } else {
+                    // Exibe a mensagem de erro caso a autenticação falhe
+                    document.getElementById('errorMessage').textContent = 'Usuário não autenticado';
+                }
+            } catch (error) {
+                // Tratar erros de requisição e exibir a mensagem apropriada
+                console.error('Erro na requisição:', error);
+                document.getElementById('errorMessage').textContent = 'Ocorreu um erro ao tentar realizar o login.';
+            }
+        });
+    </script>
+</body>
+</html>
